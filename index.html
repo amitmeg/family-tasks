@@ -218,12 +218,24 @@
     }
 
     .idan {
-      background: linear-gradient(135deg, #fff3cd, #ffecb3) !important;
-      color: #7c6200;
+      background: linear-gradient(135deg, #dbeafe, #bfdbfe) !important;
+      color: #1e3a5f;
       text-shadow: 0 1px 0 rgba(255,255,255,0.5);
     }
 
     .yuli {
+      background: linear-gradient(135deg, #fce7f3, #fbcfe8) !important;
+      color: #831843;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+    }
+
+    .babulia {
+      background: linear-gradient(135deg, #dcfce7, #bbf7d0) !important;
+      color: #14532d;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+    }
+
+    .maya {
       background: linear-gradient(135deg, #cff4fc, #b6effb) !important;
       color: #005c6e;
       text-shadow: 0 1px 0 rgba(255,255,255,0.5);
@@ -317,8 +329,8 @@
       text-align: center;
     }
 
-    .stat-card.idan-card { background: linear-gradient(135deg, #fff3cd, #ffecb3); }
-    .stat-card.yuli-card { background: linear-gradient(135deg, #cff4fc, #b6effb); }
+    .stat-card.idan-card { background: linear-gradient(135deg, #dbeafe, #bfdbfe); }
+    .stat-card.yuli-card { background: linear-gradient(135deg, #fce7f3, #fbcfe8); }
 
     .stat-name {
       font-size: 18px;
@@ -326,8 +338,8 @@
       margin-bottom: 8px;
     }
 
-    .idan-card .stat-name { color: #7c6200; }
-    .yuli-card .stat-name { color: #005c6e; }
+    .idan-card .stat-name { color: #1e3a5f; }
+    .yuli-card .stat-name { color: #831843; }
 
     .stat-row {
       display: flex;
@@ -339,6 +351,19 @@
 
     .stat-row .label { color: #64748b; }
     .stat-row .value { font-weight: 700; color: #1a1a2e; }
+
+    .stats-section-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 10px;
+    }
+
+    .stats-divider {
+      height: 1px;
+      background: #e2e8f0;
+      margin: 18px 0;
+    }
 
     .stat-total {
       margin-top: 8px;
@@ -371,25 +396,25 @@
     }
 
     .stat-bar .idan-bar {
-      background: linear-gradient(90deg, #fbbf24, #f59e0b);
+      background: linear-gradient(90deg, #3b82f6, #2563eb);
       transition: width 0.4s ease;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 11px;
       font-weight: 700;
-      color: #7c6200;
+      color: #fff;
     }
 
     .stat-bar .yuli-bar {
-      background: linear-gradient(90deg, #22d3ee, #06b6d4);
+      background: linear-gradient(90deg, #ec4899, #db2777);
       transition: width 0.4s ease;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 11px;
       font-weight: 700;
-      color: #005c6e;
+      color: #fff;
     }
 
     /* ===== MODALS ===== */
@@ -506,8 +531,10 @@
 
     .person-btn:active { transform: scale(0.95); }
 
-    .person-btn.idan-btn { background: linear-gradient(135deg, #fff3cd, #ffecb3); border-color: #fbbf24; color: #7c6200; }
-    .person-btn.yuli-btn { background: linear-gradient(135deg, #cff4fc, #b6effb); border-color: #22d3ee; color: #005c6e; }
+    .person-btn.idan-btn { background: linear-gradient(135deg, #dbeafe, #bfdbfe); border-color: #3b82f6; color: #1e3a5f; }
+    .person-btn.yuli-btn { background: linear-gradient(135deg, #fce7f3, #fbcfe8); border-color: #ec4899; color: #831843; }
+    .person-btn.babulia-btn { background: linear-gradient(135deg, #dcfce7, #bbf7d0); border-color: #22c55e; color: #14532d; }
+    .person-btn.maya-btn { background: linear-gradient(135deg, #cff4fc, #b6effb); border-color: #22d3ee; color: #005c6e; }
     .person-btn.empty-btn { background: #f8fafc; border-color: #e2e8f0; color: #94a3b8; font-weight: 500; }
     .person-btn.other-btn { background: linear-gradient(135deg, #e2d9f3, #d5c8eb); border-color: #a78bfa; color: #4a2d7a; }
 
@@ -611,11 +638,21 @@
     .today-task .t-person { font-size: 15px; font-weight: 700; }
 
     .today-task.idan-task {
-      background: linear-gradient(135deg, #fff3cd, #ffecb3);
-      color: #7c6200;
+      background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+      color: #1e3a5f;
     }
 
     .today-task.yuli-task {
+      background: linear-gradient(135deg, #fce7f3, #fbcfe8);
+      color: #831843;
+    }
+
+    .today-task.babulia-task {
+      background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+      color: #14532d;
+    }
+
+    .today-task.maya-task {
       background: linear-gradient(135deg, #cff4fc, #b6effb);
       color: #005c6e;
     }
@@ -924,14 +961,11 @@
       if (body.classList.contains('open')) renderStats();
     }
 
-    function renderStats() {
-      const body = document.getElementById('statsBody');
+    function countAssignments(dataSource) {
       const counts = {};
-
-      // Count assignments per person per task
       ASSIGNMENT_TASKS.forEach(task => {
         DAYS.forEach(day => {
-          const person = (currentData.assignments && currentData.assignments[task.id] && currentData.assignments[task.id][day]) || '';
+          const person = (dataSource.assignments && dataSource.assignments[task.id] && dataSource.assignments[task.id][day]) || '';
           if (!person) return;
           if (!counts[person]) counts[person] = { total: 0, tasks: {} };
           counts[person].total++;
@@ -939,14 +973,38 @@
           counts[person].tasks[task.id]++;
         });
       });
+      return counts;
+    }
 
+    function getAllTimeCounts() {
+      const allWeeks = JSON.parse(localStorage.getItem('familyTasks') || '{}');
+      const totalCounts = {};
+      let weekCount = 0;
+      Object.values(allWeeks).forEach(weekData => {
+        weekCount++;
+        const wc = countAssignments(weekData);
+        Object.entries(wc).forEach(([person, data]) => {
+          if (!totalCounts[person]) totalCounts[person] = { total: 0, tasks: {} };
+          totalCounts[person].total += data.total;
+          Object.entries(data.tasks).forEach(([taskId, val]) => {
+            if (!totalCounts[person].tasks[taskId]) totalCounts[person].tasks[taskId] = 0;
+            totalCounts[person].tasks[taskId] += val;
+          });
+        });
+      });
+      return { counts: totalCounts, weekCount };
+    }
+
+    function renderStatsSection(counts, label) {
+      const cardClassMap = { 'עידן': 'idan-card', 'יולי': 'yuli-card' };
       const idanCount = counts['עידן'] || { total: 0, tasks: {} };
       const yuliCount = counts['יולי'] || { total: 0, tasks: {} };
       const totalAssignments = idanCount.total + yuliCount.total;
       const idanPct = totalAssignments > 0 ? Math.round((idanCount.total / totalAssignments) * 100) : 0;
       const yuliPct = totalAssignments > 0 ? 100 - idanPct : 0;
 
-      let html = '<div class="stats-grid">';
+      let html = `<div class="stats-section-label">${label}</div>`;
+      html += '<div class="stats-grid">';
 
       // Idan card
       html += '<div class="stat-card idan-card">';
@@ -978,6 +1036,23 @@
         if (idanPct > 0) html += `<div class="idan-bar" style="width:${idanPct}%">${idanPct}%</div>`;
         if (yuliPct > 0) html += `<div class="yuli-bar" style="width:${yuliPct}%">${yuliPct}%</div>`;
         html += '</div></div>';
+      }
+
+      return html;
+    }
+
+    function renderStats() {
+      const body = document.getElementById('statsBody');
+
+      // Weekly stats
+      const weeklyCounts = countAssignments(currentData);
+      let html = renderStatsSection(weeklyCounts, '📅 שבוע נוכחי');
+
+      // All-time stats
+      const { counts: allTimeCounts, weekCount } = getAllTimeCounts();
+      if (weekCount > 0) {
+        html += `<div class="stats-divider"></div>`;
+        html += renderStatsSection(allTimeCounts, `📊 כל הזמנים (${weekCount} שבועות)`);
       }
 
       body.innerHTML = html;
@@ -1061,6 +1136,8 @@
     function getColorClass(person) {
       if (person === 'עידן') return 'idan';
       if (person === 'יולי') return 'yuli';
+      if (person === 'בבוליה') return 'babulia';
+      if (person === 'מאיה') return 'maya';
       if (person && person.length > 0) return 'other';
       return '';
     }
@@ -1081,14 +1158,21 @@
       document.getElementById('personModalTitle').textContent = `${taskName} - יום ${dayName}`;
 
       let html = '';
+      const btnClass = { 'בבוליה': 'babulia-btn', 'מאיה': 'maya-btn' };
       html += `<button class="person-btn idan-btn" onclick="selectPerson('עידן')">עידן</button>`;
       html += `<button class="person-btn yuli-btn" onclick="selectPerson('יולי')">יולי</button>`;
       OTHER_HELPERS.forEach(name => {
-        html += `<button class="person-btn other-btn" onclick="selectPerson('${name}')">${name}</button>`;
+        html += `<button class="person-btn ${btnClass[name] || 'other-btn'}" onclick="selectPerson('${name}')">${name}</button>`;
       });
       html += `<button class="person-btn empty-btn" onclick="selectPerson('')">ריק</button>`;
+      html += `<button class="person-btn other-btn" onclick="promptCustomPerson()">אחר...</button>`;
       grid.innerHTML = html;
       modal.classList.add('active');
+    }
+
+    function promptCustomPerson() {
+      const name = prompt('הכנס שם:');
+      if (name && name.trim()) selectPerson(name.trim());
     }
 
     function selectPerson(person) {
@@ -1263,6 +1347,8 @@
         let cls = 'empty-task';
         if (person === 'עידן') cls = 'idan-task';
         else if (person === 'יולי') cls = 'yuli-task';
+        else if (person === 'בבוליה') cls = 'babulia-task';
+        else if (person === 'מאיה') cls = 'maya-task';
         else if (person) cls = 'other-task';
 
         tasksHtml += `<div class="today-task ${cls}">`;
