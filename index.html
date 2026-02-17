@@ -424,6 +424,10 @@
       overflow-y: auto;
     }
 
+    #templateModal .modal {
+      max-width: 600px;
+    }
+
     .modal-handle {
       width: 40px;
       height: 4px;
@@ -508,10 +512,17 @@
     .person-btn.other-btn { background: linear-gradient(135deg, #e2d9f3, #d5c8eb); border-color: #a78bfa; color: #4a2d7a; }
 
     /* ===== TEMPLATE MODAL ===== */
+    .template-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin: 12px -8px;
+      padding: 0 8px;
+    }
+
     .template-table {
       width: 100%;
+      min-width: 420px;
       border-collapse: collapse;
-      margin: 12px 0;
     }
 
     .template-table th {
@@ -750,7 +761,7 @@
       <div class="modal-handle"></div>
       <h3>⚙️ תבנית ברירת מחדל</h3>
       <p class="template-info">הגדר מי אחראי על כל משימה בכל יום כברירת מחדל.<br>לחץ על תא כדי לשנות. התבנית תיטען אוטומטית לשבועות חדשים.</p>
-      <table class="template-table" id="templateTable"></table>
+      <div class="template-wrap"><table class="template-table" id="templateTable"></table></div>
       <div class="modal-buttons">
         <button class="btn-save" onclick="saveTemplate()">שמור תבנית</button>
         <button class="btn-cancel" onclick="closeTemplateModal()">ביטול</button>
