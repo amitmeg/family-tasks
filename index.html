@@ -134,6 +134,7 @@
 
     table {
       width: 100%;
+      table-layout: fixed;
       border-collapse: separate;
       border-spacing: 0;
       background: white;
@@ -224,20 +225,20 @@
     }
 
     .yuli {
-      background: linear-gradient(135deg, #fce7f3, #fbcfe8) !important;
-      color: #831843;
+      background: linear-gradient(135deg, #fef3c7, #fde68a) !important;
+      color: #78350f;
       text-shadow: 0 1px 0 rgba(255,255,255,0.5);
     }
 
     .babulia {
-      background: linear-gradient(135deg, #dcfce7, #bbf7d0) !important;
-      color: #14532d;
+      background: linear-gradient(135deg, #e2d9f3, #d5c8eb) !important;
+      color: #4a2d7a;
       text-shadow: 0 1px 0 rgba(255,255,255,0.5);
     }
 
     .maya {
-      background: linear-gradient(135deg, #cff4fc, #b6effb) !important;
-      color: #005c6e;
+      background: linear-gradient(135deg, #e2d9f3, #d5c8eb) !important;
+      color: #4a2d7a;
       text-shadow: 0 1px 0 rgba(255,255,255,0.5);
     }
 
@@ -330,7 +331,7 @@
     }
 
     .stat-card.idan-card { background: linear-gradient(135deg, #dbeafe, #bfdbfe); }
-    .stat-card.yuli-card { background: linear-gradient(135deg, #fce7f3, #fbcfe8); }
+    .stat-card.yuli-card { background: linear-gradient(135deg, #fef3c7, #fde68a); }
 
     .stat-name {
       font-size: 18px;
@@ -339,7 +340,7 @@
     }
 
     .idan-card .stat-name { color: #1e3a5f; }
-    .yuli-card .stat-name { color: #831843; }
+    .yuli-card .stat-name { color: #78350f; }
 
     .stat-row {
       display: flex;
@@ -407,7 +408,7 @@
     }
 
     .stat-bar .yuli-bar {
-      background: linear-gradient(90deg, #ec4899, #db2777);
+      background: linear-gradient(90deg, #f59e0b, #d97706);
       transition: width 0.4s ease;
       display: flex;
       align-items: center;
@@ -532,9 +533,9 @@
     .person-btn:active { transform: scale(0.95); }
 
     .person-btn.idan-btn { background: linear-gradient(135deg, #dbeafe, #bfdbfe); border-color: #3b82f6; color: #1e3a5f; }
-    .person-btn.yuli-btn { background: linear-gradient(135deg, #fce7f3, #fbcfe8); border-color: #ec4899; color: #831843; }
-    .person-btn.babulia-btn { background: linear-gradient(135deg, #dcfce7, #bbf7d0); border-color: #22c55e; color: #14532d; }
-    .person-btn.maya-btn { background: linear-gradient(135deg, #cff4fc, #b6effb); border-color: #22d3ee; color: #005c6e; }
+    .person-btn.yuli-btn { background: linear-gradient(135deg, #fef3c7, #fde68a); border-color: #f59e0b; color: #78350f; }
+    .person-btn.babulia-btn { background: linear-gradient(135deg, #e2d9f3, #d5c8eb); border-color: #a78bfa; color: #4a2d7a; }
+    .person-btn.maya-btn { background: linear-gradient(135deg, #e2d9f3, #d5c8eb); border-color: #a78bfa; color: #4a2d7a; }
     .person-btn.empty-btn { background: #f8fafc; border-color: #e2e8f0; color: #94a3b8; font-weight: 500; }
     .person-btn.other-btn { background: linear-gradient(135deg, #e2d9f3, #d5c8eb); border-color: #a78bfa; color: #4a2d7a; }
 
@@ -643,18 +644,18 @@
     }
 
     .today-task.yuli-task {
-      background: linear-gradient(135deg, #fce7f3, #fbcfe8);
-      color: #831843;
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      color: #78350f;
     }
 
     .today-task.babulia-task {
-      background: linear-gradient(135deg, #dcfce7, #bbf7d0);
-      color: #14532d;
+      background: linear-gradient(135deg, #e2d9f3, #d5c8eb);
+      color: #4a2d7a;
     }
 
     .today-task.maya-task {
-      background: linear-gradient(135deg, #cff4fc, #b6effb);
-      color: #005c6e;
+      background: linear-gradient(135deg, #e2d9f3, #d5c8eb);
+      color: #4a2d7a;
     }
 
     .today-task.other-task {
@@ -740,6 +741,7 @@
     <button onclick="copyPreviousWeek()">📋 העתק שבוע קודם</button>
     <button onclick="openTemplateModal()">⚙️ תבנית ברירת מחדל</button>
     <button onclick="goToCurrentWeek()">📅 היום</button>
+    <button onclick="screenshotTable()">📸 צילום</button>
     <span id="syncStatus" class="sync-status local"><span class="sync-dot"></span>מקומי</span>
   </div>
 
@@ -822,8 +824,8 @@
     const DAY_NAMES = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי'];
     const ASSIGNMENT_TASKS = [
       { id: 'wake', name: 'לקום לאדם', icon: '☀️' },
-      { id: 'dropoff', name: 'לשים בגן', icon: '🚸' },
-      { id: 'pickup', name: 'לאסוף מהגן', icon: '🛒' },
+      { id: 'dropoff', name: 'לשים בגן', icon: '🟢' },
+      { id: 'pickup', name: 'לאסוף מהגן', icon: '🔴' },
       { id: 'evening', name: 'ערב', icon: '🛏️' },
     ];
     const FREETEXT_TASKS = [
@@ -1229,6 +1231,36 @@
     function navigateWeek(direction) {
       currentWeekOffset += direction;
       loadCurrentWeek();
+    }
+
+    async function screenshotTable() {
+      const table = document.querySelector('table');
+      const wrapper = document.querySelector('.table-wrapper');
+      // Save original scroll
+      const origScroll = wrapper.scrollLeft;
+      wrapper.scrollLeft = 0;
+
+      try {
+        // Load html2canvas if not loaded
+        if (typeof html2canvas === 'undefined') {
+          await new Promise((resolve, reject) => {
+            const s = document.createElement('script');
+            s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+            s.onload = resolve;
+            s.onerror = reject;
+            document.head.appendChild(s);
+          });
+        }
+        const canvas = await html2canvas(table, { scale: 2, useCORS: true, backgroundColor: '#f0f4f8' });
+        const link = document.createElement('a');
+        link.download = `tasks-${getWeekKey(currentWeekOffset)}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      } catch(e) {
+        // Fallback: copy table as text
+        alert('לא הצלחתי לצלם. נסה שוב.');
+      }
+      wrapper.scrollLeft = origScroll;
     }
 
     function goToCurrentWeek() {
