@@ -205,10 +205,23 @@
       user-select: none;
       -webkit-user-select: none;
       letter-spacing: 0.5px;
+      vertical-align: middle;
     }
 
     td.assignment:hover { filter: brightness(0.96); }
     td.assignment:active { transform: scale(0.97); }
+
+    .cell-note {
+      font-size: 10px;
+      font-weight: 400;
+      color: inherit;
+      opacity: 0.7;
+      margin-top: 2px;
+      line-height: 1.2;
+      letter-spacing: 0;
+      word-break: break-word;
+      text-shadow: none;
+    }
 
     td.assignment.empty-cell { background: #fafbfc; }
     td.assignment.empty-cell::after {
@@ -777,6 +790,13 @@
       <div class="modal-handle"></div>
       <h3 id="personModalTitle">בחר אחראי</h3>
       <div class="person-grid" id="personGrid"></div>
+      <div style="margin-top: 14px;">
+        <label style="font-size: 13px; font-weight: 600; color: #64748b; display: block; margin-bottom: 6px; text-align: right;">📝 הערה</label>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <input type="text" id="assignmentNoteInput" placeholder="הערה קצרה..." autocomplete="off" style="flex: 1;">
+          <button class="btn-save" onclick="saveNoteOnly()" style="padding: 12px 16px; white-space: nowrap; margin-top: 0;">שמור הערה</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -864,7 +884,7 @@
       const data = loadWeekLocal(weekKey);
       if (data) return data;
       // If no data exists for this week, return empty (template applied separately)
-      return { assignments: {}, freeText: {} };
+      return { assignments: {}, freeText: {}, assignmentNotes: {} };
     }
 
     function saveData() {
@@ -1118,8 +1138,10 @@
           const todayCls = i === todayIdx ? 'today-col' : '';
           if (task.type === 'assignment') {
             const person = (currentData.assignments && currentData.assignments[task.id] && currentData.assignments[task.id][day]) || '';
+            const note = (currentData.assignmentNotes && currentData.assignmentNotes[task.id] && currentData.assignmentNotes[task.id][day]) || '';
             const colorCls = person ? getColorClass(person) : 'empty-cell';
-            html += `<td class="assignment ${colorCls} ${todayCls}" onclick="openPersonPicker('${task.id}','${day}')">${person}</td>`;
+            const noteHtml = note ? `<div class="cell-note">${escapeHtml(note)}</div>` : '';
+            html += `<td class="assignment ${colorCls} ${todayCls}" onclick="openPersonPicker('${task.id}','${day}')">${person}${noteHtml}</td>`;
           } else {
             const text = (currentData.freeText && currentData.freeText[task.id] && currentData.freeText[task.id][day]) || '';
             html += `<td class="freetext ${todayCls}" onclick="openTextModal('${task.id}','${day}')"><div class="cell-text">${escapeHtml(text)}</div></td>`;
@@ -1157,6 +1179,10 @@
       const dayName = DAY_NAMES[DAYS.indexOf(day)];
       document.getElementById('personModalTitle').textContent = `${taskName} - יום ${dayName}`;
 
+      // Load existing note
+      const existingNote = (currentData.assignmentNotes && currentData.assignmentNotes[taskId] && currentData.assignmentNotes[taskId][day]) || '';
+      document.getElementById('assignmentNoteInput').value = existingNote;
+
       let html = '';
       const btnClass = { 'בבוליה': 'babulia-btn', 'מאיה': 'maya-btn' };
       html += `<button class="person-btn idan-btn" onclick="selectPerson('עידן')">עידן</button>`;
@@ -1181,10 +1207,30 @@
       if (!currentData.assignments) currentData.assignments = {};
       if (!currentData.assignments[taskId]) currentData.assignments[taskId] = {};
       currentData.assignments[taskId][day] = person;
+
+      // Save assignment note
+      const note = document.getElementById('assignmentNoteInput').value.trim();
+      if (!currentData.assignmentNotes) currentData.assignmentNotes = {};
+      if (!currentData.assignmentNotes[taskId]) currentData.assignmentNotes[taskId] = {};
+      currentData.assignmentNotes[taskId][day] = note;
+
       saveData();
       render();
       renderTodayCard();
       renderStats();
+      closePersonModal();
+    }
+
+    function saveNoteOnly() {
+      if (!editingCell) return;
+      const { taskId, day } = editingCell;
+      const note = document.getElementById('assignmentNoteInput').value.trim();
+      if (!currentData.assignmentNotes) currentData.assignmentNotes = {};
+      if (!currentData.assignmentNotes[taskId]) currentData.assignmentNotes[taskId] = {};
+      currentData.assignmentNotes[taskId][day] = note;
+      saveData();
+      render();
+      renderTodayCard();
       closePersonModal();
     }
 
@@ -1381,9 +1427,11 @@
         else if (person === 'מאיה') cls = 'maya-task';
         else if (person) cls = 'other-task';
 
+        const taskNote = (currentData.assignmentNotes && currentData.assignmentNotes[task.id] && currentData.assignmentNotes[task.id][dayKey]) || '';
         tasksHtml += `<div class="today-task ${cls}">`;
-        tasksHtml += `<div><div class="t-name">${task.icon} ${task.name}</div><div class="t-person">${person || '—'}</div></div>`;
-        tasksHtml += '</div>';
+        tasksHtml += `<div><div class="t-name">${task.icon} ${task.name}</div><div class="t-person">${person || '—'}</div>`;
+        if (taskNote) tasksHtml += `<div style="font-size: 11px; opacity: 0.7; margin-top: 2px;">${escapeHtml(taskNote)}</div>`;
+        tasksHtml += '</div></div>';
       });
       document.getElementById('todayTasks').innerHTML = tasksHtml;
 
